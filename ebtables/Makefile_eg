@@ -1,0 +1,29 @@
+
+
+#====================================================================
+#  Set GCC Flag
+# -L : for target app
+# -B : for gcc tools
+#====================================================================
+#export CC=$(TOOLPATH)/bin/$(CROSS_COMPILE)gcc $(LDLIBS) $(AP_FLAG)
+
+build: all
+
+EBDIR=ebtables-v2.0.10-4
+
+TARGETS=ebtables
+
+all:
+	@echo "BUILD         $(TARGETS)"
+	@cd ${EBDIR} &&  make CC=$(CC) AR=mips-linux-ar  && cd ..
+     
+install:
+	@echo $(shell pwd)
+	@echo "INSTALL       $(TARGETS)"
+	@cd ${EBDIR} && make LIB_DIR=/lib BINDIR=/usr/sbin DESTDIR=${BIN_PATH}/../fsbase/rootfs install && cd ../..
+	#@cd ${EBDIR} && cp -f $(TARGETS) ${BIN_PATH}/../fsbase/rootfs/usr/sbin/ && cd ../..
+clean:
+	@echo "CLEAN         $(TARGETS)"
+	@cd ${EBDIR}	&& $(MAKE) clean && cd ../..
+	@find . -follow $(REMOVE_PATTERN) -type f | xargs rm -f
+
